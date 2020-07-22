@@ -91,11 +91,11 @@ namespace RhinoToJson
                                     finalMesh.Append(m);
                                 }
                             }
-                            allElements.Add(mesh.GenerateMeshElement(finalMesh, mat, new List<string> { ObjectType.Brep.ToString() }, new List<string> { ObjectType.Brep.ToString() }));
+                            allElements.Add(mesh.GenerateMeshElement(finalMesh, mat, new List<string> { "objectId" }, new List<string> { obj.ObjectId.ToString() }));
                             break;
                         case ObjectType.Mesh:
                             var msh = obj.Mesh();
-                            allElements.Add(mesh.GenerateMeshElement(msh, mat, new List<string> { ObjectType.Brep.ToString() }, new List<string> { ObjectType.Brep.ToString() }));
+                            allElements.Add(mesh.GenerateMeshElement(msh, mat, new List<string> { "objectId" }, new List<string> { obj.ObjectId.ToString() }));
                             break;
                         case ObjectType.Light:
                             break;
@@ -136,6 +136,17 @@ namespace RhinoToJson
                         case ObjectType.ClipPlane:
                             break;
                         case ObjectType.Extrusion:
+
+                            var extruction = obj.Brep();
+                            var meshExtruction = Mesh.CreateFromBrep(extruction);
+                            if (meshExtruction?.Length > 0)
+                            {
+                                foreach (var m in meshExtruction)
+                                {
+                                    finalMesh.Append(m);
+                                }
+                            }
+                            allElements.Add(mesh.GenerateMeshElement(finalMesh, mat, new List<string> { "objectId" }, new List<string> { obj.ObjectId.ToString() }));
                             break;
                         case ObjectType.AnyObject:
                             break;
